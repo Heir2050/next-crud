@@ -8,14 +8,25 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
-import { PencilIcon, Trash2Icon } from "lucide-react"
+import { Loader2Icon, PencilIcon } from "lucide-react"
 import { getUsers } from "@/server/users";
 import DeleteUserButton from "./delete-user";
+import UserForm from "./user-form";
 
 async function UserTable() {
 
     const users = await getUsers();
+
+    // const [isOpen, setIsOpen] = useState(false);
 
     return (
         <div className="w-full">
@@ -35,14 +46,28 @@ async function UserTable() {
                                 <TableCell className="font-medium">{user.username}</TableCell>
                                 <TableCell>
                                     <div className="flex h-full items-center justify-end gap-1">
-                                        <Button
-                                            variant="ghost"
-                                            size="icon"
-                                            className="rounded-full"
-                                            aria-label={`edit-user-${user.id}`}
-                                        >
-                                            <PencilIcon />
-                                        </Button>
+                                        <Dialog>
+                                            <DialogTrigger asChild>
+                                                <Button
+                                                    variant="ghost"
+                                                    size="icon"
+                                                    className="rounded-full"
+                                                    aria-label={`edit-user-${user.id}`}
+                                                >
+                                                    <PencilIcon />
+                                                </Button>
+                                            </DialogTrigger>
+                                            <DialogContent>
+                                                <DialogHeader>
+                                                    <DialogTitle>Edit User</DialogTitle>
+                                                </DialogHeader>
+                                                <DialogDescription>
+                                                    Update the user's information.
+                                                </DialogDescription>
+
+                                                <UserForm user={user} />
+                                            </DialogContent>
+                                        </Dialog>
 
                                         <DeleteUserButton userId={user.id} />
                                         

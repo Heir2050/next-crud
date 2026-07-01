@@ -13,7 +13,7 @@ import {
     FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { createUser } from "@/server/users";
+import { createUser, updateUser } from "@/server/users";
 
 const formSchema = z.object({
     email: z.string().email("Please enter a valid email address."),
@@ -27,18 +27,32 @@ const formSchema = z.object({
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { User } from "@/db/schema";
 
-export default function UserForm() {
+interface UserFormProps {
+    user?: User;
+}
+
+export default function UserForm({ user }: UserFormProps) {
 
     const router = useRouter();
 
     const [isLoading, setLoading] = useState(false);
 
+    // Before updating feature
+    // const form = useForm<z.infer<typeof formSchema>>({
+    //     resolver: zodResolver(formSchema),
+    //     defaultValues: {
+    //         email: "",
+    //         username: "",
+    //     },
+    // });
+
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            email: "",
-            username: "",
+            email: user?.email || "",
+            username: user?.username || "",
         },
     });
 
@@ -48,16 +62,28 @@ export default function UserForm() {
 
         try {
 
-            await createUser(data);
+            if (user) {
+                await updateUser(
+                    {
+                        ...data,
+                        id: user.id,
+                    }
+                );
+                toast.success("User updated successfully!");
+                // router.refresh();
+                // return;
+            }else {
+                await createUser(data);
+            }
 
-            toast.success("User created successfully!");
+            toast.success(`User ${user ? "updated" : "created"} successfully!`); // Display success message  
 
             form.reset();
 
             router.refresh();
 
         } catch (error) {
-            toast.error("Failed to create user.");
+            toast.error(`Failed ${user ? "updated" : "created"} user`);
             setLoading(false);
         } finally {
             setLoading(false);

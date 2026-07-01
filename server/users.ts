@@ -27,10 +27,10 @@ export async function createUser(user: Omit<User, "id" | "createdAt" | "updatedA
     }
 }
 
-export async function updateUser(id: string, user: Omit<User, "createdAt" | "updatedAt">) {
+export async function updateUser(user: Omit<User, "createdAt" | "updatedAt">) {
     // Implementation for updating an existing user
     try {
-        await db.update(users).set(user).where(eq(users.id, id))
+        await db.update(users).set(user).where(eq(users.id, user.id))
     } catch (error) {
         console.error("Error updating user:", error)
         return {error: "Failed to update user"}
