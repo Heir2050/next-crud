@@ -26,7 +26,7 @@ const formSchema = z.object({
 // import React from "react";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
-import { useRouter } from "next/dist/client/components/navigation";
+import { useRouter } from "next/navigation";
 
 export default function UserForm() {
 

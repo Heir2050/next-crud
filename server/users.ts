@@ -36,3 +36,13 @@ export async function updateUser(id: string, user: Omit<User, "createdAt" | "upd
         return {error: "Failed to update user"}
     }
 }
+
+export async function deleteUser(id: string) {
+    // Implementation for deleting a user
+    try {
+        await db.delete(users).where(eq(users.id, id))
+    } catch (error) {
+        console.error("Error deleting user:", error)
+        return {error: "Failed to delete user"}
+    }
+}
