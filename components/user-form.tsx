@@ -26,8 +26,11 @@ const formSchema = z.object({
 // import React from "react";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
+import { useRouter } from "next/dist/client/components/navigation";
 
 export default function UserForm() {
+
+    const router = useRouter();
 
     const [isLoading, setLoading] = useState(false);
 
@@ -61,6 +64,8 @@ export default function UserForm() {
         await createUser(data);
 
         form.reset();
+
+        router.refresh();
 
         setLoading(false);
     }
