@@ -7,27 +7,12 @@ import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardFooter,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card";
-import {
     Field,
-    FieldDescription,
     FieldError,
     FieldGroup,
     FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import {
-    InputGroup,
-    InputGroupAddon,
-    InputGroupText,
-    InputGroupTextarea,
-} from "@/components/ui/input-group";
 import { createUser } from "@/server/users";
 
 const formSchema = z.object({
@@ -38,7 +23,14 @@ const formSchema = z.object({
         .max(32, "Username must be at most 32 characters."),
 });
 
+// import React from "react";
+import { useState } from "react";
+import { Loader2 } from "lucide-react";
+
 export default function UserForm() {
+
+    const [isLoading, setLoading] = useState(false);
+
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -47,7 +39,10 @@ export default function UserForm() {
         },
     });
 
-    function onSubmit(data: z.infer<typeof formSchema>) {
+    async function onSubmit(data: z.infer<typeof formSchema>) {
+
+        setLoading(true);
+
         toast("You submitted the following values:", {
             description: (
                 <pre className="mt-2 w-[320px] overflow-x-auto rounded-md bg-code p-4 text-code-foreground">
@@ -63,9 +58,11 @@ export default function UserForm() {
             } as React.CSSProperties,
         });
 
-        createUser(data)
+        await createUser(data);
 
-        form.reset()
+        form.reset();
+
+        setLoading(false);
     }
 
     return (
@@ -126,9 +123,11 @@ export default function UserForm() {
                     variant="outline"
                     onClick={() => form.reset()}
                 >
-                    Annuler
+                    Cancel
                 </Button>
-                <Button type="submit">Valider</Button>
+                <Button type="submit" disabled={isLoading}>
+                    {isLoading ? <Loader2 className="size-4 animate-spin" /> : "Create"}
+                </Button>
             </div>
         </form>
     );

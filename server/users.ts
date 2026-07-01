@@ -20,8 +20,7 @@ export async function createUser(user: Omit<User, "id" | "createdAt" | "updatedA
     // Implementation for creating a new user
     try {
         // const newUser = await db.insert(users).values({ username, email }).returning()
-        const newUser = await db.insert(users).values(user)
-        return newUser
+        await db.insert(users).values(user)
     } catch (error) { 
         console.error("Error creating user:", error)
         return {error: "Failed to create user"}
@@ -31,8 +30,7 @@ export async function createUser(user: Omit<User, "id" | "createdAt" | "updatedA
 export async function updateUser(id: string, user: Omit<User, "createdAt" | "updatedAt">) {
     // Implementation for updating an existing user
     try {
-        const updatedUser = await db.update(users).set(user).where(eq(users.id, id))
-        return updatedUser
+        await db.update(users).set(user).where(eq(users.id, id))
     } catch (error) {
         console.error("Error updating user:", error)
         return {error: "Failed to update user"}
