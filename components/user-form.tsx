@@ -46,28 +46,22 @@ export default function UserForm() {
 
         setLoading(true);
 
-        toast("You submitted the following values:", {
-            description: (
-                <pre className="mt-2 w-[320px] overflow-x-auto rounded-md bg-code p-4 text-code-foreground">
-                    <code>{JSON.stringify(data, null, 2)}</code>
-                </pre>
-            ),
-            position: "bottom-right",
-            classNames: {
-                content: "flex flex-col gap-2",
-            },
-            style: {
-                "--border-radius": "calc(var(--radius)  + 4px)",
-            } as React.CSSProperties,
-        });
+        try {
 
-        await createUser(data);
+            await createUser(data);
 
-        form.reset();
+            toast.success("User created successfully!");
 
-        router.refresh();
+            form.reset();
 
-        setLoading(false);
+            router.refresh();
+
+        } catch (error) {
+            toast.error("Failed to create user.");
+            setLoading(false);
+        } finally {
+            setLoading(false);
+        }
     }
 
     return (

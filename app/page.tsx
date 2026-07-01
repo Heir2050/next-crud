@@ -24,11 +24,12 @@ export default async function Home() {
                     </DialogTrigger>
                     <DialogContent>
                         <DialogHeader>
-                        <DialogTitle>Add User</DialogTitle>
-                        <DialogDescription>
-                            <UserForm />
-                        </DialogDescription>
+                            <DialogTitle>Add User</DialogTitle>
+                            <DialogDescription>
+                                Fill in the details below to create a new user.
+                            </DialogDescription>
                         </DialogHeader>
+                        <UserForm />
                     </DialogContent>
                 </Dialog>
             </div>
